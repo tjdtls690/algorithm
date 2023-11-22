@@ -12,13 +12,7 @@ public class Main {
         int n = Integer.parseInt(br.readLine());
         map = new char[n][n];
         
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                map[i][j] = '*';
-            }
-        }
-        
-        convertForResult(0, 0, n, n);
+        convertForResult(0, 0, n, false);
         
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
@@ -32,33 +26,30 @@ public class Main {
     }
     
     private void convertForResult(
-        int xStart,
-        int yStart,
-        int xEnd,
-        int yEnd
+        int x,
+        int y,
+        int n,
+        boolean isSpace
     ) {
-        int thirdDivide = (xEnd - xStart) / 3;
-        
-        int xConvertStart = xStart + thirdDivide;
-        int xConvertEnd = xConvertStart + thirdDivide;
-        int yConvertStart = yStart + thirdDivide;
-        int yConvertEnd = yConvertStart + thirdDivide;
-        
-        for (int i = xConvertStart; i < xConvertEnd; i++) {
-            for (int j = yConvertStart; j < yConvertEnd; j++) {
-                map[i][j] = ' ';
+        if (isSpace) {
+            for (int i = x; i < x + n; i++) {
+                for (int j = y; j < y + n; j++) {
+                    map[i][j] = ' ';
+                }
             }
-        }
-        
-        if (thirdDivide <= 1) {
             return;
         }
         
-        int[] nextX = {xStart, xConvertStart, xConvertEnd, xConvertEnd + thirdDivide};
-        int[] nextY = {yStart, yConvertStart, yConvertEnd, yConvertEnd + thirdDivide};
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                convertForResult(nextX[i], nextY[j], nextX[i + 1], nextY[j + 1]);
+        if (n == 1) {
+            map[x][y] = '*';
+            return;
+        }
+        
+        int cnt = 0;
+        for (int i = x; i < x+n; i += n/3) {
+            for (int j = y; j < y+n; j += n/3) {
+                cnt++;
+                convertForResult(i, j, n/3, cnt == 5);
             }
         }
     }
